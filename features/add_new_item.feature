@@ -9,3 +9,5 @@ Feature: Add new item
 
     Given I'm on the homepage
     And there is an empty list
+    When I add a new item
+    Then I can see the new item added to the list

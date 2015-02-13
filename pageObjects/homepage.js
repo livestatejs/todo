@@ -29,18 +29,31 @@
         },
 
         addNewItemInput: function () {
-            return getElement('#addNew');
+            var elementPromise = getElement('#addNew');
+
+            return {
+                element: elementPromise,
+                setValue: function (value) {
+                    var deferred = q.defer();
+
+                    browser.setValue('#addNew', value, function () {
+                        deferred.resolve();
+                    });
+
+                    return deferred.promise;
+                }
+            }
         },
 
         getList: function () {
-            var element = getElement('#list');
+            var elementPromise = getElement('#list');
 
             return {
-                element: element,
+                element: elementPromise,
                 children: function () {
                     var deferred = q.defer();
 
-                    element.then(function (element) {
+                    elementPromise.then(function (element) {
                         browser.elementIdElements(element.value.ELEMENT, 'li', function (error, element) {
                             if (error) {
                                 deferred.reject(new Error(error));
