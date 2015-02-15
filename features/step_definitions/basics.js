@@ -11,31 +11,26 @@ module.exports = function () {
     });
 
     this.Then(/^I see the new item input field$/, function (callback) {
-        homepage.addNewItemInput().element.should.be.fulfilled.and.notify(callback);
+        homepage.NewItemInput().element.should.be.fulfilled.and.notify(callback);
     });
 
-    this.Given(/^there is an empty list$/, function (callback) {
-        homepage.getList().children().should.be.fulfilled.then(function (elementSelector) {
+    this.Given(/^there is a (\d+) items long list$/, function ($length, callback) {
+        homepage.List().children().should.be.fulfilled.then(function (elementSelector) {
             var error = '';
-            if (elementSelector.value.length > 0) {
-                error = 'Children length is ' + elementSelector.value.length + ', expected 0';
+            if (elementSelector.value.length > $length) {
+                error = 'Children length is ' + elementSelector.value.length + ', expected ' + $length;
             }
             callback(error);
         });
     });
-
-    this.When(/^I add a new item$/, function (callback) {
-        homepage.addNewItemInput().setValue("Testing\uE007").should.be.fulfilled.and.notify(callback);
+    
+    this.Then(/^the \#(\d+) items text is (.+)$/, function (itemIndex, expectedText, callback) {
+        homepage.List().getItemByIndex(itemIndex).should.be.fulfilled.then(function (element) {
+            element.value.should.equal(expectedText);
+        }).should.notify(callback);
     });
 
-    this.Then(/^I can see the new item added to the list$/, function (callback) {
-        homepage.getList().children().should.be.fulfilled.then(function (elementSelector) {
-            var error = '';
-            if (elementSelector.value.length !== 1) {
-                callback('Children length is ' + elementSelector.value.length + ', expected 1');
-            } else {
-                callback();
-            }
-        });
+    this.When(/^I add a new item$/, function (callback) {
+        homepage.NewItemInput().setValue("Testing\uE007").should.be.fulfilled.and.notify(callback);
     });
 };

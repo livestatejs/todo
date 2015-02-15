@@ -1,69 +1,36 @@
 (function () {
-    var browser = require('./../helpers/browser.js').get(),
-        q = require('q');
-
-
-    function getElement (selector) {
-        var deferred = q.defer();
-
-        browser.element(selector, function (error, element) {
-            if (error) {
-                deferred.reject(new Error(error));
-            } else {
-                deferred.resolve(element);
-            }
-        });
-
-        return deferred.promise;
-    }
+    var browser = require('./../helpers/browser.js').get();
 
     module.exports = {
         navigate: function () {
-            var deferred = q.defer();
-
-            browser.url('http://localhost:8989', function () {
-                deferred.resolve();
-            });
-
-            return deferred.promise;
+            return browser.url('http://localhost:8989');
         },
 
-        addNewItemInput: function () {
-            var elementPromise = getElement('#addNew');
+        NewItemInput: function () {
+            var elementPromise = browser.element('#addNew');
 
             return {
                 element: elementPromise,
                 setValue: function (value) {
-                    var deferred = q.defer();
-
-                    browser.setValue('#addNew', value, function () {
-                        deferred.resolve();
-                    });
-
-                    return deferred.promise;
+                    return browser.setValue('#addNew', value);
                 }
-            }
+            };
         },
 
-        getList: function () {
-            var elementPromise = getElement('#list');
+        List: function () {
+            var elementPromise = browser.element('#list');
 
             return {
                 element: elementPromise,
                 children: function () {
-                    var deferred = q.defer();
-
-                    elementPromise.then(function (element) {
-                        browser.elementIdElements(element.value.ELEMENT, 'li', function (error, element) {
-                            if (error) {
-                                deferred.reject(new Error(error));
-                            } else {
-                                deferred.resolve(element);
-                            }
-                        });
+                    return elementPromise.then(function (element) {
+                        return browser.elementIdElements(element.value.ELEMENT, 'li');
                     });
-
-                    return deferred.promise;
+                },
+                getItemByIndex: function (index) {
+                    return this.children().then(function (elements) {
+                        return browser.elementIdText(elements.value[index-1].ELEMENT);
+                    });
                 }
             };
         }

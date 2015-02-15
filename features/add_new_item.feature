@@ -8,6 +8,7 @@ Feature: Add new item
   Scenario: Submitting a new item
 
     Given I'm on the homepage
-    And there is an empty list
+    And there is a 0 items long list
     When I add a new item
-    Then I can see the new item added to the list
+    Then there is a 1 items long list
+    And the #1 items text is Testing

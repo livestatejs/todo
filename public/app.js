@@ -6,7 +6,7 @@ addNewInput.addEventListener('keypress', function (event) {
     if (event.keyCode === 13) {
         var item = document.createElement('li');
 
-        item.innerHTML = 'TestValue';
+        item.innerHTML = addNewInput.value;
         list.appendChild(item);
     }
 });
