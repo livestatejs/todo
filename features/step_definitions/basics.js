@@ -17,7 +17,7 @@ module.exports = function () {
     this.Given(/^there is a (\d+) items long list$/, function ($length, callback) {
         homepage.List().children().should.be.fulfilled.then(function (elementSelector) {
             var error = '';
-            if (elementSelector.value.length > $length) {
+            if (elementSelector.value.length != $length) {
                 error = 'Children length is ' + elementSelector.value.length + ', expected ' + $length;
             }
             callback(error);
@@ -30,7 +30,7 @@ module.exports = function () {
         }).should.notify(callback);
     });
 
-    this.When(/^I add a new item$/, function (callback) {
-        homepage.NewItemInput().setValue("Testing\uE007").should.be.fulfilled.and.notify(callback);
+    this.When(/^I add a new item with a title (.*)$/, function (title, callback) {
+        homepage.NewItemInput().setValue(title + "\uE007").should.be.fulfilled.and.notify(callback);
     });
 };

@@ -5,10 +5,16 @@ Feature: Add new item
     Given I'm on the homepage
     Then I see the new item input field
 
-  Scenario: Submitting a new item
+  Scenario Outline: Submitting a new item
 
     Given I'm on the homepage
-    And there is a 0 items long list
-    When I add a new item
-    Then there is a 1 items long list
-    And the #1 items text is Testing
+    And there is a <initial_length> items long list
+    When I add a new item with a title <title>
+    Then there is a <length> items long list
+    And the #<position> items text is <title>
+
+    Examples:
+
+      | initial_length | title        | length | position |
+      | 0              | Testing      | 1      | 1        |
+      | 0              | 12345        | 1      | 1        |
